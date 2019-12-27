@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jn.dao.RecordDao">
+
+<resultMap id="myrecord" type="Record">
+    <id column="re_id" property="re_id"></id>
+    <result column="user_id" property="user_id"></result>
+    <result column="book_id" property="book_id"></result>
+    <result column="lend_data" property="lend_data"></result>
+    <result column="return_data" property="return_data"></result>
+    <result column="cost" property="cost"></result>
+    <collection property="bookList" ofType="Book" >
+
+        <result column="book_id" property="book_id"></result>
+        <result column="name" property="name"></result>
+        <result column="author" property="author"></result>
+        <result column="press" property="press"></result>
+        <result column="price" property="price"></result>
+        <result column="p_date" property="p_date"></result>
+        <result column="category" property="category"></result>
+    </collection>
+
+</resultMap>
+
+    <select id="selectByUser" resultMap="myrecord">
+        select  re_id, R.user_id,R.book_id, lend_data,return_data,B.name,B.author,B.press,B.category,B.price,B.p_date,cost
+    from tab_record R, tab_book B
+    where R.book_id = B.book_id
+    and  user_id=#{0}
+    ORDER BY return_data limit #{1},#{2};
+    </select>
+
+    <insert id="addOne">
+     insert tab_record(user_id,book_id,lend_data ) VALUES (#{1},#{0},#{2}) ;
+    </insert>
+
+    <update id="updateOne">
+    update tab_record set return_data = #{1} WHERE re_id=#{0} ;
+
+    </update>
+
+    <select id="lockOne" resultType="Record">
+    select  * from tab_record where re_id = #{0} for update;
+    </select>
+
+    <update id="changeCost">
+    update tab_record set cost = #{1} WHERE re_id=#{0} ;
+    </update>
+    <select id="noReturn" resultMap="myrecord">
+    select  re_id, R.user_id,R.book_id, lend_data,B.name,B.author,B.press,B.category,B.price,B.p_date,cost
+    from tab_record R, tab_book B
+    where R.book_id = B.book_id
+    and R.user_id=#{0} and return_data is  null ;
+    </select>
+
+    <select id="total" resultType="int">
+   select count(*) from tab_record where user_id=#{0};
+    </select>
+
+</mapper>

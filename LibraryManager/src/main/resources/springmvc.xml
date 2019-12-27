@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task-3.2.xsd
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--声明扫描器-->
+    <context:component-scan base-package="com.jn.controller"></context:component-scan>
+    <!--声明注解驱动-->
+    <mvc:annotation-driven/>
+
+    <!--  声明静态资源的处理-->
+    <!--    <mvc:resources location="/statics/" mapping="/**"></mvc:resources>-->
+    <mvc:resources location="/statics/" mapping="/statics/**"></mvc:resources>
+    <!--  注册监听器  -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.jn.controller.MyInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+    <!--  设置定时任务-->
+    <!--配置包扫描-->
+    <context:component-scan base-package="com.jn.timer"/>
+
+    <!-- 定时任务配置 scheduler 方式 注解 -->
+    <task:executor id="executor" pool-size="5"/>
+    <task:scheduler id="scheduler" pool-size="10"/>
+    <task:annotation-driven executor="executor" scheduler="scheduler"/>
+
+
+</beans>

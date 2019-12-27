@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jn.dao.BookDao">
+
+    <select id="selectAllType" resultType="String">
+   select distinct category from tab_book ;
+    </select>
+    <select id="selectByType" resultType="Book">
+   select * from tab_book where category=#{0}  order by lendtime desc limit #{1},#{2};
+    </select>
+    <select id="totalByType" resultType="int">
+   select count(*) from tab_book where category=#{0};
+    </select>
+
+    <select id="selectSome" resultType="Book">
+    SELECT * from tab_book
+    <where>
+        <if test="book.name != null and book.name !='' ">
+            name like CONCAT('%',#{book.name},'%')
+        </if>
+        <if test="book.author != null and book.author !='' ">
+            and author like CONCAT('%',#{book.author},'%')
+        </if>
+        <if test="book.category !=null and book.category !=''">
+            and category like CONCAT('%',#{book.category},'%')
+        </if>
+        <if test="book.press != null and book.press !='' ">
+            and press like CONCAT('%',#{book.press},'%')
+        </if>
+    </where>
+    order by lendtime desc limit #{skipCount},#{pageCount};
+</select>
+
+    <select id="totalOfSearch" resultType="int">
+        SELECT count(book_id)from tab_book
+        <where>
+            <if test="name != null and name !='' ">
+                and name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="author != null and author !='' ">
+                and author like CONCAT('%',#{author},'%')
+            </if>
+            <if test="category !=null and category !=''">
+                and category like CONCAT('%',#{category},'%')
+            </if>
+            <if test="press != null and press !='' ">
+                and press like CONCAT('%',#{press},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectRest" resultType="int">
+   select rest from tab_book where book_id=#{0};
+    </select>
+
+    <update id="updateOne" >
+     update tab_book set rest = (rest-1),lendtime = (lendtime+1) WHERE book_id=#{0} ;
+    </update>
+
+    <select id="lockOne" resultType="Book">
+    select  * from tab_book where book_id = #{0} for update;
+    </select>
+
+    <update id="returnOne" >
+     update tab_book set rest = (rest+1) WHERE book_id=#{0}  ;
+    </update>
+
+</mapper>

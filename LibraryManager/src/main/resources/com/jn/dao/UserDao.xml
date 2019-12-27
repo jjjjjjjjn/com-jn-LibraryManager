@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jn.dao.UserDao">
+
+
+    <select id="selectOne" resultType="User">
+   select * from tab_user where user_name=#{0} and user_password=#{1};
+    </select>
+
+    <select id="getLnumber" resultType="int">
+    select  lnumber from tab_user where user_id = #{0};
+    </select>
+
+    <select id="getMoney" resultType="int">
+    select  money from tab_user where user_id = #{0};
+    </select>
+
+    <select id="lockOne" resultType="User">
+    select  * from tab_user where user_id=#{0} for update;
+    </select>
+
+    <update id="updateOne">
+    update tab_user set user_name=#{1},user_password=#{2}  where user_id=#{0};
+    </update>
+
+   <update id="setLnumber">
+    update tab_user set lnumber =(lnumber+(#{1}))  where user_id =#{0};
+    </update>
+
+  <select id="selectUser" resultType="User">
+  SELECT * from tab_user
+  <where>
+   <if test="user_id > 0  ">
+     user_id = #{user_id}
+   </if>
+   <if test="user_name != null and user_name !='' ">
+    and user_name = #{user_name};
+    </if>
+  </where>
+
+ </select>
+ <insert id="addUser">
+  insert into tab_user (user_name,user_password,money) values (#{user_name},#{user_password},#{money})
+ </insert>
+
+ <delete id="deleteUser">
+  delete from tab_user where user_id=#{0}
+ </delete>
+
+ <update id="changeUser">
+  update tab_user set user_name=#{user_name},user_password=#{user_password} ,money=#{money},lnumber=#{lnumber} where user_id=#{user_id};
+ </update>
+
+    <select id="selectAll" resultType="User">
+   select * from tab_user;
+    </select>
+
+    <update id="changeMoney">
+   update tab_user set money=#{1} where user_id=#{0};
+   </update>
+
+
+
+
+
+
+</mapper>
