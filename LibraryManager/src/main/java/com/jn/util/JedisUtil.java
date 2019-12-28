@@ -20,7 +20,7 @@ import java.util.Map;
 public class JedisUtil {
     @Autowired
     LoginService loginService;
-    private static final Jedis JEDIS = new Jedis("47.98.146.107", 6379);
+    private static final Jedis JEDIS = new Jedis("**.**.***.***", 6379);
 
     static {
         JEDIS.auth("15319902234.jn");
